@@ -1,0 +1,45 @@
+name: Build action
+on: [push]
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: docker build
+        run: docker build -t vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+      - name: docker login
+        run: echo ${{ secrets.DOCKER_TOKEN }} | docker login -u sermalenk --password-stdin
+      - name: docker push
+        run: docker push sermalenk/skypro-flask-app:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    env:
+      SUPERSECRET_INFO: ${{ secrets.SUPERSECRET_INFO }}
+    steps:
+      - name: clone code
+        uses: actions/checkout@v2
+      - name: render configs
+        run: |
+          mkdir deploy
+          cat docker-compose-server.yaml | envsubst > deploy/docker-compose.yaml
+          cat prod_config.py | envsubst > deploy/docker_config.py
+      - name: clone config
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          source: "deploy/docker-compose.yaml,deploy/docker_config.py"
+          target: flask-app
+          strip_components: 1
+      - name: run docker-compose
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd flask-app
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
