@@ -9,7 +9,7 @@ jobs:
       - name: docker build
         run: docker build -t vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
       - name: docker login
-        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p-stdin
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
       - name: docker push
         run: docker push vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
   deploy:
