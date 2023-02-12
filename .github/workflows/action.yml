@@ -21,4 +21,15 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/todolist
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/todolist1:latest
+
+
+
+
+
+
+
+
+
+
+
