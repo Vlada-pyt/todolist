@@ -27,7 +27,7 @@ services:
         condition: service_healthy
     volumes:
       - ./.docker_env:/app/env
-    command: sleep 10 && python manage.py migrate
+    command: python manage.py migrate
   postgres:
     image: postgres:latest
     environment:
