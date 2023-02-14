@@ -18,16 +18,16 @@ services:
         condition: service_completed_successfully
     volumes:
       - ./docker_config.py:/code/default_config.py
-  migrations:
-    build:
-      context: .
-    image: vladapython/todolist
-    depends_on:
-      postgres:
-        condition: service_healthy
-    volumes:
-      - ./docker_config.py:/code/default_config.py
-    command: python manage.py migrate
+#  migrations:
+#    build:
+#      context: .
+#    image: vladapython/todolist
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    volumes:
+#      - ./docker_config.py:/code/default_config.py
+#    command: python manage.py migrate
   postgres:
     image: postgres:latest
     environment:
