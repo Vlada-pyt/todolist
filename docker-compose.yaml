@@ -17,7 +17,7 @@ services:
       migrations:
         condition: service_completed_successfully
     volumes:
-      - ./.docker_env:/app/env
+      - ./docker_config.py:/code/default_config.py
   migrations:
     build:
       context: .
@@ -26,7 +26,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./.docker_env:/app/env
+      - ./docker_config.py:/code/default_config.py
     command: python manage.py migrate
   postgres:
     image: postgres:latest
@@ -40,7 +40,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./.docker_env:/todolist/.env
+      - ./postgres-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
 
