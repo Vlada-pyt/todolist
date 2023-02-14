@@ -1,2 +1,1 @@
-DEBUG = True
-DATABASE_URL = 'psql://postgres:postgres@todolist-postgres:5432/todolist'
+SQLALCHEMY_DATABASE_URI = "postgresql://user:pass@postgres/todolist"

@@ -1,2 +1,1 @@
-DEBUG = True
-DATABASE_URL='psql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}'
+SQLALCHEMY_DATABASE_URI = "postgresql://$DB_USER:$DB_PASSWORD@postgres/$DB_NAME"
