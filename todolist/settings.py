@@ -87,8 +87,9 @@ DATABASES = {
         'NAME': 'todolist-postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': '0.0.0.0',
         'PORT': '5432',
+        'DATABASE_URL': 'psql://postgres:postgres@postgres:5432/todolist-postgres'
     }
 }
 

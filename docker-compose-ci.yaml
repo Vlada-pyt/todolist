@@ -18,7 +18,7 @@ services:
         condition: service_healthy
     volumes:
       - ./.docker_env:/app/env
-    command: flask db upgrade
+    command: python manage.py migrate
   postgres:
     image: postgres:latest
     environment:
