@@ -28,17 +28,22 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      HOST: 0.0.0.0
+      HOST: postgres
       DB_HOST: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - ./docker_config.py:/code/default_config.py
-    command: sleep 5 && python manage.py migrate
+    command: sleep 10
   postgres:
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: todolist-postgres
+      POSTGRES_DB: 0.0.0.0
       POSTGRES_HOST: HOST
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
