@@ -28,6 +28,7 @@ services:
       context: .
     environment:
       DB_HOST: postgres
+      HOST: postgres
     depends_on:
       postgres:
         condition: service_healthy
