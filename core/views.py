@@ -6,7 +6,7 @@ from core.models import User
 from core.serializers import CreateUserSerializer, LoginSerializer, ProfileSerializer, UpdatePasswordSerializer
 
 
-class RegistryView(generics.CreateAPIView):
+class SignupView(generics.CreateAPIView):
     serializer_class = CreateUserSerializer
 
 
