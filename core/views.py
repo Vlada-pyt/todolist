@@ -10,7 +10,6 @@ class SignupView(generics.CreateAPIView):
     serializer_class = CreateUserSerializer
 
 
-
 class LoginView(generics.CreateAPIView):
     serializer_class = LoginSerializer
 
