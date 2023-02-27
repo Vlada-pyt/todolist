@@ -34,7 +34,7 @@ services:
         condition: service_healthy
     volumes:
       - ./.docker_env:/api/.env
-    command: python manage.py migrate
+    command: sleep 8 && python manage.py migrate
   postgres:
     image: postgres:latest
     ports:

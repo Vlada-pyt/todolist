@@ -1,5 +1,7 @@
 from django.contrib.auth import login, logout
 from rest_framework import generics, permissions, status
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from core.models import User
@@ -16,14 +18,14 @@ class LoginView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        login(request=self.request, user=serializer.save())
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        login(request, user=serializer.save())
+        return Response(serializer.data)
 
 
-class ProfileView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
+class ProfileView(RetrieveUpdateDestroyAPIView):
+   # queryset = User.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get_object(self):
         return self.request.user
