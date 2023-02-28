@@ -9,7 +9,7 @@ services:
       api:
         condition: service_started
   api:
-    image: vladapython/todolist:latest
+    image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
       DB_USER: $DB_USER
       DB_PASSWORD: $DB_PASSWORD
@@ -25,7 +25,7 @@ services:
       migrations:
         condition: service_completed_successfully
   migrations:
-    image: vladapython/todolist:latest
+    image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
       postgres:
         condition: service_healthy
