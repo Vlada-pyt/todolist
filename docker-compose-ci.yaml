@@ -9,7 +9,7 @@ services:
       api:
         condition: service_started
   api:
-    image: vladapython/todolist
+    image: vladapython/todolist:latest
     environment:
       DB_USER: $DB_USER
       DB_PASSWORD: $DB_PASSWORD
