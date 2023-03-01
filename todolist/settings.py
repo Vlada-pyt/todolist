@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'social_django',
+    'django_filters',
     'dotenv',
     'todolist',
     'core',
+    'goals',
 ]
 
 MIDDLEWARE = [
@@ -161,4 +163,8 @@ SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/logged-in/'
 SOCIAL_AUTH_USER_MODEL = 'core.User'
 
 
-#DATABASE_URL = os.getenv('DATABASE_URL')
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+}
