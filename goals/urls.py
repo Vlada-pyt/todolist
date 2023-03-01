@@ -13,3 +13,4 @@ urlpatterns = [
     path('goal_comment/list', views.GoalCommentListView.as_view(), name='list-comment'),
     path('goal_comment/<pk>', views.GoalCommentView.as_view(), name='retrieve-update-destroy-comment'),
 ]
+
