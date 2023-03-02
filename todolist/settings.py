@@ -94,7 +94,7 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT'),
-        'DATABASE_URL': 'psql://todolist:todolist@postgres:5432/todolist',
+
     }
 }
 
@@ -167,4 +167,4 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
 }
 
-DATABASE_URL = 'psql://todolist:todolist@postgres:5432/todolist'
+# DATABASE_URL = 'psql://todolist:todolist@postgres:5432/todolist'
