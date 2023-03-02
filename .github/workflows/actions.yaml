@@ -7,11 +7,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
       - name: build
-        run: docker build -t vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID .
+        run: docker build -t vladapython/todolist:latest .
       - name: login
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
       - name: push
-        run: docker push vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+        run: docker push vladapython/todolist:latest
   deploy:
     needs: build
     runs-on: ubuntu-latest
