@@ -94,7 +94,7 @@ DATABASES = {
         'PASSWORD': os.getenv('DB_PASSWORD'),
         'HOST': os.getenv('DB_HOST'),
         'PORT': os.getenv('DB_PORT'),
-        'DATABASE_URL': os.getenv('DATABASE_URL'),
+        'DATABASE_URL': 'psql://todolist:todolist@postgres:5432/todolist',
     }
 }
 
@@ -168,3 +168,5 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
+
+DATABASE_URL = 'psql://todolist:todolist@postgres:5432/todolist'
