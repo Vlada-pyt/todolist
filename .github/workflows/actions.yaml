@@ -24,6 +24,8 @@ jobs:
           export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
           export DB_USER=${{ secrets.DB_USER }}
           export DB_NAME=${{ secrets.DB_NAME }}
+          export SOCIAL_AUTH_VK_OAUTH2_KEY=${{ secrets.SOCIAL_AUTH_VK_OAUTH2_KEY }}
+          export SOCIAL_AUTH_VK_OAUTH2_SECRET=${{ secrets.SOCIAL_AUTH_VK_OAUTH2_SECRET }}
           cat docker-compose-ci.yaml | envsubst > deploy/docker-compose.yaml
       - name: copy files
         uses: appleboy/scp-action@master

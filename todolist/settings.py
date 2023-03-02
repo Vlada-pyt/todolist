@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE'),
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME'),
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
@@ -165,8 +165,6 @@ SOCIAL_AUTH_USER_MODEL = 'core.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 DATABASE_URL = 'psql://todolist:todolist@postgres:5432/todolist'
