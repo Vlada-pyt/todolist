@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 services:
   front:
@@ -9,14 +9,14 @@ services:
       api:
         condition: service_started
   api:
-    image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    image: vladapython/todolist:latest
     environment:
       DB_USER: $DB_USER
       DB_PASSWORD: $DB_PASSWORD
       DB_NAME: $DB_NAME
       DB_HOST: postgres
-      SOCIAL_AUTH_VK_OAUTH2_KEY: $SOCIAL_AUTH_VK_OAUTH2_KEY
-      SOCIAL_AUTH_VK_OAUTH2_SECRET: $SOCIAL_AUTH_VK_OAUTH2_SECRET
+    ports:
+      - "8000:8000"
     volumes:
       - ./.docker_env:/api/.env
     depends_on:
@@ -24,31 +24,27 @@ services:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-
   migrations:
-    image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    image: vladapython/todolist:latest
     depends_on:
       postgres:
         condition: service_healthy
     environment:
       DB_HOST: postgres
-      DB_USER: $DB_USER
-      DB_PASSWORD: $DB_PASSWORD
-      DB_NAME: $DB_NAME
     volumes:
       - ./.docker_env:/api/.env
     command: python manage.py migrate
-
   postgres:
     image: postgres:latest
     environment:
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: $DB_NAME
+      POSTGRES_HOST: $DB_HOST
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data 700
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $DB_USER -d $DB_NAME"]
+      test: ["CMD-SHELL", "pg_isready -U todolist"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 5
