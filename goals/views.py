@@ -5,11 +5,10 @@ from rest_framework import filters, generics, permissions
 
 from goals.filters import GoalDateFilter
 from goals.models import Goal, GoalCategory, GoalComment, BoardParticipant, Board
-from goals.permissions import IsOwnerOrReadOnly, BoardPermissions, GoalCategoryPermissions, GoalPermissions, \
-    GoalCommentsPermissions
+from goals.permissions import BoardPermissions, GoalCategoryPermissions, GoalPermissions, GoalCommentsPermissions
 from goals.serializers import (
     GoalCategoryCreateSerializer, GoalCategorySerializer, GoalCommentCreateSerializer, GoalCommentSerializer,
-    GoalCreateSerializer, GoalSerializer, BoardCreateSerializer, BoardSerializer,
+    GoalCreateSerializer, GoalSerializer, BoardCreateSerializer, BoardSerializer, BoardListSerializer,
 )
 
 
@@ -24,14 +23,15 @@ class BoardCreateView(generics.CreateAPIView):
 
 class BoardListView(generics.ListAPIView):
     permission_classes = [BoardPermissions]
-    serializer_class = BoardCreateSerializer
-
+    serializer_class = BoardListSerializer
     filter_backends = [filters.OrderingFilter]
-    ordering = ['title']
+    ordering = ["title"]
 
     def get_queryset(self):
-        return Board.objects.filter(is_deleted=False)
-
+        return Board.objects.filter(
+            participants__user_id=self.request.user.id,
+            is_deleted=False
+        )
 
 class BoardView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [BoardPermissions]
