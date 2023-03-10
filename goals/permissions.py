@@ -11,12 +11,17 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.user_id == request.user.id
 
 
-class BoardPermissions(permissions.IsAuthenticated):
+class BoardPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-        _filters: dict = {'user_id': request.user.id, 'board_id': obj.id}
-        if request.method not in permissions.SAFE_METHODS:
-            _filters['role'] = BoardParticipant.Role.owner
-        return BoardParticipant.objects.filter(**_filters).exists()
+        if not request.user.is_authenticated:
+            return False
+        if request.method in permissions.SAFE_METHODS:
+            return BoardParticipant.objects.filter(
+                user=request.user, board=obj
+            ).exists()
+        return BoardParticipant.objects.filter(
+            user=request.user, board=obj, role=BoardParticipant.Role.owner
+        ).exists()
 
 
 class GoalCategoryPermissions(permissions.IsAuthenticated):

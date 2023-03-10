@@ -22,7 +22,7 @@ class BoardCreateView(generics.CreateAPIView):
 
 
 class BoardListView(generics.ListAPIView):
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [BoardPermissions]
     serializer_class = BoardCreateSerializer
 
     filter_backends = [filters.OrderingFilter]
