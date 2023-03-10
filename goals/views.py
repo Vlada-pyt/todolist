@@ -21,6 +21,7 @@ class BoardCreateView(generics.CreateAPIView):
         BoardParticipant.objects.create(user=self.request.user, board=serializer.save())
 
 
+
 class BoardListView(generics.ListAPIView):
     permission_classes = [BoardPermissions]
     serializer_class = BoardCreateSerializer
