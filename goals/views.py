@@ -77,7 +77,7 @@ class GoalListView(generics.ListAPIView):
         return Goal.objects.filter(
             category__board__participants__user_id=self.request.user.id,
             category__is_deleted=False
-        ).exclude(status=Goal.Status.archived)
+        ).exists(status=Goal.Status.archived)
 
 
 class GoalCreateView(generics.CreateAPIView):
@@ -94,7 +94,7 @@ class GoalView(generics.RetrieveUpdateDestroyAPIView):
         return Goal.objects.filter(
                 category__board__participants__user_id=self.request.user.id,
                 category__is_deleted=False
-            ).exclude(status=Goal.Status.archived)
+            ).exists(status=Goal.Status.archived)
 
     def perform_destroy(self, instance: Goal):
         instance.is_deleted = True
@@ -112,7 +112,7 @@ class GoalCommentListView(generics.ListAPIView):
     def get_queryset(self):
         return GoalComment.objects.filter(
             goal__category__board__participants__user_id=self.request.user.id
-        ).exclude(
+        ).exists(
             goal__status=Goal.Status.archived
         )
 
@@ -130,7 +130,7 @@ class GoalCommentView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         return GoalComment.objects.filter(
             user=self.request.user
-        ).exclude(
+        ).exists(
             goal__status=Goal.Status.archived
         )
 
