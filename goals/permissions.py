@@ -14,6 +14,7 @@ class BoardPermissions(permissions.IsAuthenticated):
         return BoardParticipant.objects.filter(**_filters).exists()
 
 
+
 class GoalCategoryPermissions(permissions.IsAuthenticated):
     def has_object_permission(self, request, view, obj: GoalCategory):
         _filters: dict = {'user_id': request.user.id, 'board_id': obj.board_id}
