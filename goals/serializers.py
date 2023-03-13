@@ -94,15 +94,15 @@ class GoalCategorySerializer(serializers.ModelSerializer):
 
 
 class GoalCreateSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(
-        queryset=GoalCategory.objects.filter(is_deleted=False)
-    )
+    # category = serializers.PrimaryKeyRelatedField(
+    #     queryset=GoalCategory.objects.filter(is_deleted=False)
+    # )
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = Goal
         fields = "__all__"
-        read_only_fields = ("id", "created", "updated", "user", "category")
+        read_only_fields = ("id", "created", "updated", "user")
 
     def validate_category(self, value: GoalCategory) -> GoalCategory:
         if value.is_deleted:
