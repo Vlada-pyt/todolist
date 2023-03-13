@@ -94,9 +94,9 @@ class GoalCategorySerializer(serializers.ModelSerializer):
 
 
 class GoalCreateSerializer(serializers.ModelSerializer):
-    # category = serializers.PrimaryKeyRelatedField(
-    #     queryset=GoalCategory.objects.filter(is_deleted=False)
-    # )
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=GoalCategory.objects.filter(is_deleted=False)
+    )
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
