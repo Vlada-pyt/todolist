@@ -95,8 +95,7 @@ class GoalCategorySerializer(serializers.ModelSerializer):
 
 class GoalCreateSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(
-        queryset=GoalCategory.objects.filter(is_deleted=False)
-    )
+        queryset=GoalCategory.objects.all())
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -105,11 +104,8 @@ class GoalCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created", "updated", "user")
 
     def validate_category(self, value: GoalCategory) -> GoalCategory:
-        if value.is_deleted:
-            raise serializers.ValidationError("not allowed in deleted category")
-
-        if value.user != self.context["request"].user:
-            raise serializers.ValidationError("not owner of category")
+        if self.context["request"].user != value.user:
+            raise exceptions.PermissionDenied
 
         return value
 
@@ -123,11 +119,8 @@ class GoalSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created", "updated", "user")
 
     def validate_category(self, value: GoalCategory) -> GoalCategory:
-        if value.is_deleted:
-            raise serializers.ValidationError("not allowed in deleted category")
-
-        if value.user != self.context["request"].user:
-            raise serializers.ValidationError("not owner of category")
+        if self.context["request"].user != value.user:
+            raise exceptions.PermissionDenied
 
         return value
 
