@@ -45,7 +45,7 @@ class BoardSerializer(serializers.ModelSerializer):
         new_participants = validated_data.pop("participants")
         new_by_id = {part["user"].id: part for part in new_participants}
 
-        old_participants = instance.participants.exists(user=owner)
+        old_participants = instance.participants.exclude(user=owner)
         with transaction.atomic():
             for old_participant in old_participants:
                 if old_participant.user_id not in new_by_id:
