@@ -60,41 +60,47 @@ class GoalCategoryView(generics.RetrieveUpdateDestroyAPIView):
             instance.goals.update(status=Goal.Status.archived)
 
 
-class GoalListView(generics.ListAPIView):
-    permission_classes = [GoalPermissions]
-    serializer_class = GoalSerializer
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.OrderingFilter,
-        filters.SearchFilter,
-    ]
-    filterset_class = GoalDateFilter
-    ordering_fields = ["title", "created"]
-    ordering = ["title"]
-    search_fields = ["title", "description"]
-
-    def get_queryset(self):
-        return Goal.objects.filter(
-            category__board__participants__user_id=self.request.user.id,
-            category__is_deleted=False
-        ).exists(status=Goal.Status.archived)
-
-
 class GoalCreateView(generics.CreateAPIView):
     model = Goal
-    permission_classes = [GoalPermissions]
     serializer_class = GoalCreateSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class GoalView(generics.RetrieveUpdateDestroyAPIView):
+    model = Goal
     serializer_class = GoalSerializer
-    permission_classes = [GoalPermissions]
+    permission_classes = [permissions.IsAuthenticated, GoalPermissions]
 
     def get_queryset(self):
         return Goal.objects.filter(
-                category__board__participants__user_id=self.request.user.id,
-                category__is_deleted=False
-            ).exists(status=Goal.Status.archived)
+            category__board__participants__user=self.request.user
+        )
+
+    def perform_destroy(self, instance):
+        instance.status = Goal.Status.archived
+        instance.save()
+        return instance
+
+
+class GoalListView(generics.ListAPIView):
+    model = Goal
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = GoalSerializer
+    pagination_class = LimitOffsetPagination
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_class = GoalDateFilter
+    search_fields = ["title", "description"]
+    ordering_fields = ["due_date", "priority"]
+    ordering = ["priority", "due_date"]
+
+    def get_queryset(self):
+        return Goal.objects.filter(
+            category__board__participants__user=self.request.user
+        )
 
     def perform_destroy(self, instance: Goal):
         instance.is_deleted = True
