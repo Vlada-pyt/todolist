@@ -42,7 +42,7 @@ services:
   bot:
     image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
-      api:
+      postgres:
         condition: service_healthy
     volumes:
       - ./.env:/app/.env
