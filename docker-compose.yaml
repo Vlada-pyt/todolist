@@ -35,6 +35,15 @@ services:
     volumes:
       - ./.docker_env:/api/.env
     command: python manage.py migrate
+  bot:
+    build:
+      context: .
+    depends_on:
+      api:
+        condition: service_healthy
+    volumes:
+      - ./.env:/app/.env
+    command: python manage.py runbot
   postgres:
     image: postgres:latest
     ports:
