@@ -21,8 +21,8 @@ class TgUserSerializer(serializers.ModelSerializer):
         attrs["tg_user"] = tg_user
         return attrs
 
-    # def update(self, instance: TgUser, validated_data: dict):
-    #     return self.tg_user
+    def update(self, instance: TgUser, validated_data: dict):
+        return self.tg_user
 
 
 
