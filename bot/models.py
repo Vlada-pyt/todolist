@@ -9,7 +9,7 @@ class TgUser(models.Model):
     chat_id = models.BigIntegerField(unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, default=None)
     verification_code = models.CharField(max_length=50, null=True, blank=True, default=None)
-
+    # username = models.CharField(max_length=300, null=True, blank=True, default=None)
     @staticmethod
     def generate_verification_code() -> str:
         return os.urandom(12).hex()

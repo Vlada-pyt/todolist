@@ -24,13 +24,3 @@ class VerificationView(GenericAPIView):
         tg_client.send_message(tg_user.chat_id, "[verification has been completed]")
 
         return Response(instance.data)
-
-
-
-
-
-
-
-
-
-
