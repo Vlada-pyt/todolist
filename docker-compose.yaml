@@ -7,7 +7,8 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - api
+      api:
+        condition: service_started
   api:
     build:
       context: .
