@@ -14,44 +14,34 @@ class Command(BaseCommand):
         super().__init__(*args, **kwargs)
         self.tg_client = TgClient(settings.BOT_TOKEN)
 
-    def handle_user_without_verification(self, msg: Message, tg_user: TgUser):
-        tg_user.set_verification_code()
-        tg_user.save(update_fields=["verification_code"])
-        self.tg_client.send_message(
-            msg.chat.id, f"[verification code] {tg_user.verification_code}"
-        )
 
-    def fetch_tasks(self, msg: Message, tg_user: TgUser):
-        gls = Goal.objects.filter(user=tg_user.user)
-        if gls.count() > 0:
-            resp_msg = [f"#{item.id} {item.title}" for item in gls]
-            self.tg_client.send_message(msg.chat.id, "\n".join(resp_msg))
-        else:
-            self.tg_client.send_message(msg.chat.id, "[goals list is empty]")
 
-    def handle_verified_user(self, msg: Message, tg_user: TgUser):
-        if not msg.text:
-            return
-        if "/goals" in msg.text:
-            self.fetch_tasks(msg, tg_user)
-        else:
-            self.tg_client.send_message(msg.chat.id, "[unknown command]")
+    # def handle_authorized(self, tg_user: TgUser, msg: Message):
+    #     logger.info('Authorized')
+
+
+    # def fetch_tasks(self, msg: Message, tg_user: TgUser):
+    #     gls = Goal.objects.filter(user=tg_user.user)
+    #     if gls.count() > 0:
+    #         resp_msg = [f"#{item.id} {item.title}" for item in gls]
+    #         self.tg_client.send_message(msg.chat.id, "\n".join(resp_msg))
+    #     else:
+    #         self.tg_client.send_message(msg.chat.id, "[goals list is empty]")
+
+    # def handle_verified_user(self, msg: Message, tg_user: TgUser):
+    #     if not msg.text:
+    #         return
+    #     if "/goals" in msg.text:
+    #         self.fetch_tasks(msg, tg_user)
+    #     else:
+    #         self.tg_client.send_message(msg.chat.id, "[unknown command]")
 
     def handle_message(self, msg: Message):
-        tg_user, created = TgUser.objects.get_or_create(
-            tg_id=msg.from_.id,
-            defaults={
-                "tg_chat_id": msg.chat.id,
-                "username": msg.from_.username,
-            },
-        )
-        if created:
-            self.tg_client.send_message(msg.chat.id, "[greeting]")
-
+        tg_user, created = TgUser.objects.get_or_create(chat_id=msg.chat.id)
         if tg_user.user:
-            self.handle_verified_user(msg, tg_user)
+            self.tg_client.send_message(msg.chat.id, "[greeting]")
         else:
-            self.handle_user_without_verification(msg, tg_user)
+            self.handle_unauthorized(tg_user, msg)
 
     def handle(self, *args, **kwargs):
         offset = 0
@@ -61,3 +51,9 @@ class Command(BaseCommand):
             for item in res.result:
                 offset = item.update_id + 1
                 self.handle_message(item.message)
+
+    def handle_unauthorized(self, tg_user: TgUser, msg: Message):
+        self.tg_client.send_message(tg_user.chat_id, 'Hello!')
+        code = tg_user.set_verification_code()
+        TgUser.objects.filter(id=tg_user.id).update(verification_code=code)
+        self.tg_client.send_message(tg_user.chat_id, f"verification code: {code}")

@@ -7,7 +7,7 @@ CODE_ITEMS = "gftecjguymzxcvbnmar567890"
 
 
 class TgUser(models.Model):
-    tg_chat_id = models.BigIntegerField(default=None)
+    chat_id = models.BigIntegerField(default=None)
     tg_id = models.BigIntegerField(unique=True)
     username = models.CharField(max_length=350, null=True, blank=True, default=None)
     user = models.ForeignKey("core.User", models.PROTECT, null=True, blank=True, default=None)

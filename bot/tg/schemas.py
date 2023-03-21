@@ -12,7 +12,7 @@ class Message(BaseModel):
 
 class UpdateObj(BaseModel):
     update_id: int
-    massage: Message
+    message: Message
 
 
 class SendMessageResponse(BaseModel):
@@ -22,4 +22,4 @@ class SendMessageResponse(BaseModel):
 
 class GetUpdatesResponse(BaseModel):
     ok: bool
-    result: list[UpdateObj] = []
+    result: list[UpdateObj]
