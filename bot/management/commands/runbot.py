@@ -53,4 +53,4 @@ class Command(BaseCommand):
         self.tg_client.send_message(tg_user.chat_id, f"verification code: {code}")
 
     def handle_authorized(self, tg_user: TgUser, msg: Message):
-        logger.info('Authorized')
+        pass
