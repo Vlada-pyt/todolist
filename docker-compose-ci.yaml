@@ -42,12 +42,12 @@ services:
   bot:
     image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
-      api:
-        condition: service_started
+      postgres:
+        condition: service_healthy
     volumes:
       - ./.env:/app/.env
     environment:
-      HOST: postgres
+      host: postgres
     command: python manage.py runbot
 
 
