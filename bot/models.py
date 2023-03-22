@@ -18,5 +18,11 @@ class TgUser(models.Model):
         verbose_name_plural = "tg пользователи"
 
     @staticmethod
-    def set_verification_code():
+    def _generate_verification_code():
         return os.urandom(12).hex()
+
+    def set_verification_code(self):
+        code = self._generate_verification_code()
+        self.verification_code = code
+        self.save(update_fields=('verification_code',))
+        return code

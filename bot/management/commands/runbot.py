@@ -15,11 +15,6 @@ class Command(BaseCommand):
         self.tg_client = TgClient(settings.BOT_TOKEN)
 
 
-
-    # def handle_authorized(self, tg_user: TgUser, msg: Message):
-    #     logger.info('Authorized')
-
-
     # def fetch_tasks(self, msg: Message, tg_user: TgUser):
     #     gls = Goal.objects.filter(user=tg_user.user)
     #     if gls.count() > 0:
@@ -53,7 +48,9 @@ class Command(BaseCommand):
                 self.handle_message(item.message)
 
     def handle_unauthorized(self, tg_user: TgUser, msg: Message):
-        self.tg_client.send_message(tg_user.chat_id, 'Hello!')
+        self.tg_client.send_message(msg.chat.id, 'Hello!')
         code = tg_user.set_verification_code()
-        TgUser.objects.filter(id=tg_user.id).update(verification_code=code)
         self.tg_client.send_message(tg_user.chat_id, f"verification code: {code}")
+
+    def handle_authorized(self, tg_user: TgUser, msg: Message):
+        logger.info('Authorized')
