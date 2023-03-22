@@ -42,8 +42,8 @@ services:
   bot:
     image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     depends_on:
-      migrations:
-        condition: service_completed_successfully
+      api:
+        condition: service_started
     volumes:
       - ./.env:/app/.env
     command: python manage.py runbot
