@@ -46,7 +46,10 @@ services:
         condition: service_started
     volumes:
       - ./.env:/app/.env
+    environment:
+      HOST: postgres
     command: python manage.py runbot
+
 
   postgres:
     image: postgres:latest
