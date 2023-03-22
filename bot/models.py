@@ -7,8 +7,7 @@ CODE_ITEMS = "gftecjguymzxcvbnmar567890"
 
 
 class TgUser(models.Model):
-    tg_chat_id = models.BigIntegerField(default=None)
-    tg_id = models.BigIntegerField(unique=True)
+    chat_id = models.BigIntegerField(default=None)
     username = models.CharField(max_length=350, null=True, blank=True, default=None)
     user = models.ForeignKey("core.User", models.PROTECT, null=True, blank=True, default=None)
 
@@ -18,6 +17,6 @@ class TgUser(models.Model):
         verbose_name = "tg пользователь"
         verbose_name_plural = "tg пользователи"
 
-    def set_verification_code(self):
-        code = "".join([random.choice(CODE_ITEMS) for _ in range(12)])
-        self.verification_code = code
+    @staticmethod
+    def set_verification_code():
+        return os.urandom(12).hex()
