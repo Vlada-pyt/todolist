@@ -10,8 +10,8 @@ class TgUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TgUser
-        read_only_fields = ("tg_id", "user_id")
-        fields = ("tg_id", "verification_code", "user_id")
+        read_only_fields = ("tg_id", "user_id", "username")
+        fields = ("tg_id", "verification_code", "user_id", "username")
 
     # def validate_verification_code(self, attrs):
     #     verification_code = attrs.get("verification_code")
