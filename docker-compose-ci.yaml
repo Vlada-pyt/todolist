@@ -41,13 +41,18 @@ services:
 
   bot:
     image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    environment:
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      DB_NAME: $DB_NAME
+      DB_HOST: postgres
+      SOCIAL_AUTH_VK_OAUTH2_KEY: $SOCIAL_AUTH_VK_OAUTH2_KEY
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: $SOCIAL_AUTH_VK_OAUTH2_SECRET
     depends_on:
       postgres:
         condition: service_healthy
     volumes:
       - ./.env:/app/.env
-    environment:
-      host: postgres
     command: python manage.py runbot
 
 
