@@ -26,11 +26,9 @@ class TgUserSerializer(serializers.ModelSerializer):
         except TgUser.DoesNotExist:
             raise ValidationError('Field is incorrect')
         return code
+
     def update(self, instance: TgUser, validated_data: dict):
         return self.tg_user
-
-
-
 
 
 
