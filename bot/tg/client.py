@@ -20,12 +20,12 @@ class TgClient:
 
     def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdatesResponse:
         data = self._get(Command.GET_UPDATES, offset=offset, timeout=timeout)
-        print(data)
+        print(GetUpdatesResponse(**data))
         return GetUpdatesResponse(**data)
 
     def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
         data = self._get(Command.SEND_MESSAGE, chat_id=chat_id, text=text)
-        print(data)
+        print(SendMessageResponse(**data))
         return SendMessageResponse(**data)
 
     def _get(self, command: Command, **params) -> dict:
@@ -35,4 +35,5 @@ class TgClient:
         if not response.ok:
             print(response.json())
             raise ValueError
+        print(response.json())
         return response.json()
