@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic.main import BaseModel
 
 
 class Chat(BaseModel):
@@ -22,4 +22,4 @@ class SendMessageResponse(BaseModel):
 
 class GetUpdatesResponse(BaseModel):
     ok: bool
-    result: list[UpdateObj]
+    result: list[UpdateObj] = []

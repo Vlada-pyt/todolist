@@ -2,7 +2,7 @@ import logging
 from enum import Enum
 
 import requests
-from django.conf import settings
+from todolist import settings
 from bot.tg.schemas import GetUpdatesResponse, SendMessageResponse
 
 
@@ -29,5 +29,7 @@ class TgClient:
     def _get(self, command: Command, **params) -> dict:
         url = self.get_url(command)
         response = requests.get(url, params=params)
-
+        if not response.ok:
+            print(response.json())
+            raise ValueError
         return response.json()
