@@ -18,10 +18,10 @@ class UpdateObj(BaseModel):
 class SendMessageResponse(BaseModel):
     ok: bool
     result: Message
-    username: str
+
 
 
 class GetUpdatesResponse(BaseModel):
     ok: bool
     result: list[UpdateObj] = []
-    username: str
+
