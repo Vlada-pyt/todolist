@@ -23,5 +23,5 @@ class SendMessageResponse(BaseModel):
 
 class GetUpdatesResponse(BaseModel):
     ok: bool
-    result: list[UpdateObj] = []
+    result: list[UpdateObj]
 
