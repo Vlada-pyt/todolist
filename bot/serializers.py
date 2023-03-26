@@ -6,12 +6,12 @@ from rest_framework.exceptions import ValidationError
 
 class TgUserSerializer(serializers.ModelSerializer):
     tg_id = serializers.SlugField(source='chat_id', read_only=True)
-    # username = serializers.PrimaryKeyRelatedField(source='username', read_only=True)
+    username = serializers.PrimaryKeyRelatedField(source='username', read_only=True)
 
     class Meta:
         model = TgUser
-        fields = ('tg_id', 'verification_code', 'user_id')
-        read_only_fields = ('tg_id', 'user_id')
+        fields = ('tg_id', 'username', 'verification_code', 'user_id')
+        read_only_fields = ('tg_id', 'username', 'user_id')
 
     def validate_verification_code(self, code: str) -> str:
         try:
