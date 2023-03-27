@@ -37,3 +37,4 @@ class TgClient:
             raise ValueError
         print(response.json())
         return response.json()
+
