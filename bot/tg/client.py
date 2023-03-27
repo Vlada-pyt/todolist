@@ -1,16 +1,14 @@
+import logging
 from enum import Enum
 
 import requests
 from django.conf import settings
-
 from bot.tg.schemas import GetUpdatesResponse, SendMessageResponse
 
 
 class Command(str, Enum):
     GET_UPDATES = 'getUpdates'
     SEND_MESSAGE = 'sendMessage'
-    GET_GOALS = 'goals'
-    CREATE_GOAL = 'create'
 
 
 class TgClient:
@@ -24,9 +22,7 @@ class TgClient:
         data = self._get(Command.GET_UPDATES, offset=offset, timeout=timeout)
         return GetUpdatesResponse(**data)
 
-    def send_message(self, chat_id: int, text: str, reply_markup=None) -> SendMessageResponse:
-        if reply_markup:
-            data = self._get(Command.SEND_MESSAGE, chat_id=chat_id, text=text, reply_markup=reply_markup)
+    def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
         data = self._get(Command.SEND_MESSAGE, chat_id=chat_id, text=text)
         return SendMessageResponse(**data)
 
