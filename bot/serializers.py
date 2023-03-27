@@ -10,8 +10,8 @@ class TgUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TgUser
-        fields = ('tg_id', 'verification_code', 'user_id')
-        read_only_fields = ('tg_id', 'user_id')
+        fields = ('tg_id', 'username', 'verification_code', 'user_id')
+        read_only_fields = ('tg_id', 'username', 'user_id')
 
     def validate_verification_code(self, code: str) -> str:
         try:
@@ -22,5 +22,3 @@ class TgUserSerializer(serializers.ModelSerializer):
 
     def update(self, instance: TgUser, validated_data: dict):
         return self.tg_user
-
-
