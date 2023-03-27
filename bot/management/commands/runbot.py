@@ -51,6 +51,8 @@ class Command(BaseCommand):
         self.tg_client.send_message(msg.chat.id, 'Hello!')
         code = tg_user.set_verification_code()
         self.tg_client.send_message(tg_user.chat_id, f"verification code: {code}")
+        if tg_user.user and "/start" in msg.text:
+            self.tg_client.send_message(msg.chat.id, f"verification code: {code}")
 
     def handle_authorized(self, tg_user: TgUser, msg: Message):
         pass
