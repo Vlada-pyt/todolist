@@ -1,14 +1,16 @@
-import logging
 from enum import Enum
 
 import requests
-from todolist import settings
+from django.conf import settings
+
 from bot.tg.schemas import GetUpdatesResponse, SendMessageResponse
 
 
 class Command(str, Enum):
     GET_UPDATES = 'getUpdates'
     SEND_MESSAGE = 'sendMessage'
+    GET_GOALS = 'goals'
+    CREATE_GOAL = 'create'
 
 
 class TgClient:
@@ -20,21 +22,16 @@ class TgClient:
 
     def get_updates(self, offset: int = 0, timeout: int = 60) -> GetUpdatesResponse:
         data = self._get(Command.GET_UPDATES, offset=offset, timeout=timeout)
-        print(GetUpdatesResponse(**data))
         return GetUpdatesResponse(**data)
 
-    def send_message(self, chat_id: int, text: str) -> SendMessageResponse:
+    def send_message(self, chat_id: int, text: str, reply_markup=None) -> SendMessageResponse:
+        if reply_markup:
+            data = self._get(Command.SEND_MESSAGE, chat_id=chat_id, text=text, reply_markup=reply_markup)
         data = self._get(Command.SEND_MESSAGE, chat_id=chat_id, text=text)
-        print(SendMessageResponse(**data))
         return SendMessageResponse(**data)
 
     def _get(self, command: Command, **params) -> dict:
         url = self.get_url(command)
         response = requests.get(url, params=params)
-        print(response)
-        if not response.ok:
-            print(response.json())
-            raise ValueError
-        print(response.json())
-        return response.json()
 
+        return response.json()
