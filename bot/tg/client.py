@@ -29,5 +29,7 @@ class TgClient:
     def _get(self, command: Command, **params) -> dict:
         url = self.get_url(command)
         response = requests.get(url, params=params)
-
+        if not response.ok:
+            print(response.json())
+            raise ValueError
         return response.json()
