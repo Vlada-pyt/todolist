@@ -3,7 +3,7 @@ import random
 from django.db import models
 
 from core.models import User
-CODE_ITEMS = "gftecjguymzxcvbnmar567890"
+
 
 
 class TgUser(models.Model):
@@ -25,4 +25,6 @@ class TgUser(models.Model):
         code = self._generate_verification_code()
         self.verification_code = code
         self.save(update_fields=('verification_code',))
+
         return code
+

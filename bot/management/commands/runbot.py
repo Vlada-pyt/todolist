@@ -14,27 +14,18 @@ class Command(BaseCommand):
         super().__init__(*args, **kwargs)
         self.tg_client = TgClient(settings.BOT_TOKEN)
 
-
-    def fetch_tasks(self, msg: Message, tg_user: TgUser):
-        gls = Goal.objects.filter(user=tg_user.user)
-        if gls.count() > 0:
-            resp_msg = [f"#{item.id} {item.title}" for item in gls]
-            self.tg_client.send_message(msg.chat.id, "\n".join(resp_msg))
+    def get_tasks(self, msg: Message, tg_user: TgUser):
+        goals = Goal.objects.filter(user=tg_user.user)
+        if goals.count() > 0:
+            response = [f"#{item.id} {item.title}" for item in goals]
+            self.tg_client.send_message(msg.chat.id, "\n".join(response))
         else:
             self.tg_client.send_message(msg.chat.id, "[goals list is empty]")
-
-    def handle_verified_user(self, msg: Message, tg_user: TgUser):
-        if not msg.text:
-            return
-        if "/goals" in msg.text:
-            self.fetch_tasks(msg, tg_user)
-        else:
-            self.tg_client.send_message(msg.chat.id, "[unknown command]")
 
     def handle_message(self, msg: Message):
         tg_user, created = TgUser.objects.get_or_create(chat_id=msg.chat.id)
         if tg_user.user:
-            self.tg_client.send_message(msg.chat.id, "[greeting]")
+            self.handle_authorized(tg_user, msg)
         else:
             self.handle_unauthorized(tg_user, msg)
 
@@ -53,4 +44,9 @@ class Command(BaseCommand):
         self.tg_client.send_message(tg_user.chat_id, f"verification code: {code}")
 
     def handle_authorized(self, tg_user: TgUser, msg: Message):
-        pass
+        if not msg.text:
+            return
+        if "/goals" in msg.text:
+            self.get_tasks(msg, tg_user)
+        else:
+            self.tg_client.send_message(msg.chat.id, "[unknown command]")
