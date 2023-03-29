@@ -48,6 +48,7 @@ services:
       DB_HOST: postgres
       SOCIAL_AUTH_VK_OAUTH2_KEY: $SOCIAL_AUTH_VK_OAUTH2_KEY
       SOCIAL_AUTH_VK_OAUTH2_SECRET: $SOCIAL_AUTH_VK_OAUTH2_SECRET
+      TOKEN: $BOT_TOKEN
     depends_on:
       postgres:
         condition: service_healthy
