@@ -1,38 +1,44 @@
-version: "3.9"
+version: "3.8"
 
 services:
   front:
     image: sermalenk/skypro-front:lesson-38
-    restart: always
     ports:
       - "80:80"
     depends_on:
-      - api
+      api:
+        condition: service_started
   api:
     image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      DB_NAME: $DB_NAME
       DB_HOST: postgres
-    restart: always
-    ports:
-      - "8000:8000"
+      SOCIAL_AUTH_VK_OAUTH2_KEY: $SOCIAL_AUTH_VK_OAUTH2_KEY
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: $SOCIAL_AUTH_VK_OAUTH2_SECRET
+    volumes:
+      - ./.docker_env:/api/.env
     depends_on:
       postgres:
         condition: service_healthy
       migrations:
         condition: service_completed_successfully
-    volumes:
-      - ./.docker_env:/api/.env
+
   migrations:
     image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    environment:
-      DB_HOST: postgres
-      HOST: postgres
     depends_on:
       postgres:
         condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      DB_NAME: $DB_NAME
     volumes:
       - ./.docker_env:/api/.env
     command: python manage.py migrate
+
   bot:
     image: vladapython/todolist:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
@@ -42,6 +48,7 @@ services:
       DB_HOST: postgres
       SOCIAL_AUTH_VK_OAUTH2_KEY: $SOCIAL_AUTH_VK_OAUTH2_KEY
       SOCIAL_AUTH_VK_OAUTH2_SECRET: $SOCIAL_AUTH_VK_OAUTH2_SECRET
+      TOKEN: $BOT_TOKEN
     depends_on:
       postgres:
         condition: service_healthy
@@ -49,18 +56,17 @@ services:
       - ./.env:/app/.env
     command: python manage.py runbot
 
+
   postgres:
     image: postgres:latest
-    ports:
-      - "5432:5432"
     environment:
       POSTGRES_USER: $DB_USER
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: $DB_NAME
+    volumes:
+      - ./postgres_data:/var
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U todolist"]
+      test: ["CMD-SHELL", "pg_isready -U $DB_USER -d $DB_NAME"]
       interval: 5s
       timeout: 5s
-      retries: 15
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data 700
+      retries: 10

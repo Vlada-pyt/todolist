@@ -4,7 +4,7 @@ from django.core.management import BaseCommand
 from bot.models import TgUser
 from bot.tg.client import TgClient
 from bot.tg.schemas import Message
-from goals.models import Goal
+from goals.models import Goal, GoalCategory
 
 
 class Command(BaseCommand):
@@ -50,3 +50,30 @@ class Command(BaseCommand):
             self.get_tasks(msg, tg_user)
         else:
             self.tg_client.send_message(msg.chat.id, "[unknown command]")
+
+    def create_goal(self, user, tg_user):
+        categories = GoalCategory.objects.all()
+        cat_text = ''
+        for cat in categories:
+            cat_text += f'{cat.id}: {cat.title} \n'
+
+        self.tg_client.send_message(chat_id=tg_user.chat_id, text=f'Выберите категорию:\n{cat_text}')
+        category = self.get_answer(tg_user.chat_id)
+
+        self.tg_client.send_message(chat_id=tg_user.chat_id, text='Введите заголовок для цели')
+        title = self.get_answer(tg_user.chat_id)
+
+        result = Goal.objects.create(title=title, category=GoalCategory.objects.get(id=category), user=user, status=1,
+                                     priority=1)
+        return result.pk
+
+    def get_answer(self, chat_id):
+        while True:
+            res = self.tg_client.get_updates(offset=self.offset)
+            for item in res.result:
+                self.offset = item.update_id + 1
+                answer = item.message.text
+                if item.message.chat.id == chat_id:
+                    return answer
+                else:
+                    self.handle_message(item.message)
