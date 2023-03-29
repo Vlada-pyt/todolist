@@ -7,8 +7,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      api:
-        condition: service_started
+      - api
   api:
     build:
       context: .
@@ -39,12 +38,20 @@ services:
   bot:
     build:
       context: .
+    environment:
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+      DB_NAME: $DB_NAME
+      DB_HOST: postgres
+      SOCIAL_AUTH_VK_OAUTH2_KEY: $SOCIAL_AUTH_VK_OAUTH2_KEY
+      SOCIAL_AUTH_VK_OAUTH2_SECRET: $SOCIAL_AUTH_VK_OAUTH2_SECRET
     depends_on:
-      api:
+      postgres:
         condition: service_healthy
     volumes:
       - ./.env:/app/.env
     command: python manage.py runbot
+
   postgres:
     image: postgres:latest
     ports:
@@ -61,9 +68,3 @@ services:
       retries: 15
     volumes:
       - ./postgres-data:/var/lib/postgresql/data 700
-
-
-
-
-
-
