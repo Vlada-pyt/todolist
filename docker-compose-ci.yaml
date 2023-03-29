@@ -65,3 +65,4 @@ services:
       retries: 15
     volumes:
       - ./postgres-data:/var/lib/postgresql/data 700
+
