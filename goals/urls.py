@@ -1,7 +1,7 @@
 from django.urls import path
 
 from goals import views
-
+app_name = 'todolist.goals'
 urlpatterns = [
     path('board/create', views.BoardCreateView.as_view(), name='create-board'),
     path('board/list', views.BoardListView.as_view(), name='board-list'),

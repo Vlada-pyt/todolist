@@ -6,7 +6,6 @@ from rest_framework.exceptions import ValidationError
 
 class TgUserSerializer(serializers.ModelSerializer):
     tg_id = serializers.SlugField(source='chat_id', read_only=True)
-    #username = serializers.CharField(max_length=350, null=True, blank=True, default=None)
 
     class Meta:
         model = TgUser
